@@ -1,4 +1,4 @@
-tab1=read.table("C:\\Users\\simop\\Desktop\\UNI\\II anno\\calc-astro\\project_2\\pos_tm1.txt")
+tab1=read.table("C:\\Users\\simop\\Desktop\\UNI\\II anno\\calc-astro\\project_2\\pos_tm2.txt")
 
 t=tab1[,1]
 
