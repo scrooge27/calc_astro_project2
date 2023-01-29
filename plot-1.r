@@ -12,7 +12,7 @@ vy=tab1[,5]
 plot(x,y,pch=16,cex=0.7,col="blue",xlab="x (AU)", ylab="y (AU)")
 
 #plot della posizione-x (non richiesto)
-plot(t,x,pch=16,cex=0.7,col="blue",xlab="t", ylab="x (AU)")
+#plot(t,x,pch=16,cex=0.7,col="blue",xlab="t (T)", ylab="x (AU)")
 
 #plot della posizione-y (non richiesto)
-plot(t,y,pch=16,cex=0.7,col="blue",xlab="t", ylab="y (AU)")
+#plot(t,y,pch=16,cex=0.7,col="blue",xlab="t (T)", ylab="y (AU)")
