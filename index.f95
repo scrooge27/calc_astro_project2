@@ -88,7 +88,7 @@ module ode_solver
         integer::i,j,np
         real*8::x1,x2,&
             m0,m1t,m2t
-        real*8::h,v2,w2,u
+        real*8::h,v2,w2,u,sum,err
         real*8,dimension(0:np)::t,radq  !=raggio al quadrato
         real*8,dimension(neq,0:np)::y
         real*8,dimension(2,0:np)::r
@@ -119,31 +119,35 @@ module ode_solver
         end do
     
         do i=1,np
-            call rk4(h,y(:,i-1),y(:,i),neq)       !la subroutine agisce già sulle derivate di ogni ordine
+            call rk4(h,y(:,i-1),y(:,i),neq)       
         end do
     
         !step 3 e 4 perchè vogliono la adimensionalizzazione
     
         x1=-m2/mt                   !x1 tilde (ho già diviso per a)     la divisione tra masse è comunque adimensionale
         x2=m1/mt                    !x2 tilde (ho già diviso per a)     la divisione tra masse è comunque adimensionale
-    
+        
+        sum=0.d0
         do i=0,np  
             r(1,i)=sqrt((y(1,i)-x1)**2+y(3,i)**2)
             r(2,i)=sqrt((y(1,i)-x2)**2+y(3,i)**2)    
             radq(i)=y(1,i)**2+y(3,i)**2
     
             v2=y(2,i)**2+y(4,i)**2
-            !uso m1t ed m2t,
-            !pongo g=4pi2,
-            !pongo n=1
+            !uso m1t ed m2t
     
             u=2*pi**2*radq(i)+m1t/r(1,i)+m2t/r(2,i)
             cj(1,i)=2.d0*u-v2
+            sum=sum+cj(1,i)
             
             w2=v2+4*pi**2*radq(i)+4*pi*(y(4,i)*y(1,i)-y(2,i)*y(3,i))
             e(1,i)=w2*0.5d0-m1t/r(1,i)-m2t/r(2,i)
         end do
-    
+        
+        sum=sum/(np+1)
+        err=abs(sum-cj(1,0))/sum
+        print*,"l'integrale di Jacobi ha un valore medio di ",sum
+        print*," con un errore relativo rispetto a t=0 di",err
         doc(1:6)="jacobi"
         call save_results(doc,t,cj,np,1)
     
@@ -183,7 +187,10 @@ program main
     integer::j,np
     np=1000
     do j=1,2
+        print*,"iterazione numero",j
+        print*,""
         call execute(np,j)
         np=np*10
+        print*,""
     end do
 end program main
